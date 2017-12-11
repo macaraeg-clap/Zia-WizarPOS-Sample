@@ -3,6 +3,7 @@
           package="com.ziaplex.wizarsample">
 
     <uses-permission android:name="android.permission.CLOUDPOS_MSR"/>
+    <uses-permission android:name="android.permission.CLOUDPOS_PRINTER"/>
 
     <application
         android:allowBackup="true"

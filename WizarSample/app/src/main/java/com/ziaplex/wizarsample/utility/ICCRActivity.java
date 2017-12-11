@@ -3,6 +3,7 @@ package com.ziaplex.wizarsample.utility;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.cloudpos.jniinterface.SmartCardInterface;
 import com.ziaplex.wizarsample.CardDetails;
 import com.ziaplex.wizarsample.R;
 import com.ziaplex.wizarsample.UI;
@@ -32,6 +33,7 @@ public class ICCRActivity extends BaseActivity {
     }
 
     private void exit() {
+        //SmartCardInterface.close();
         Intent intent = new Intent("baseActivity");
         intent.putExtra("closeAll", 1);
         sendBroadcast(intent);

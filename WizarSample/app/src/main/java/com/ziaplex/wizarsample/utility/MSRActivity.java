@@ -6,10 +6,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.TextView;
 
+import com.cloudpos.jniinterface.MSRInterface;
 import com.ziaplex.wizarsample.CardDetails;
 import com.ziaplex.wizarsample.R;
 import com.ziaplex.wizarsample.UI;
-import com.cloudpos.jniinterface.MSRInterface;
 import com.ziaplex.wizarsample.Util;
 
 import static com.cloudpos.jniinterface.MSRInterface.getTrackData;
