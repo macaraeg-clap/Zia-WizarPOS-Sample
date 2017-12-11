@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">ZIA-WizarPOS</string>
+    <string name="mscr_title">Magnetic Stripe Card Reading</string>
+    <string name="iccr_title">Integrated Circuit Card Reading</string>
+    <string name="bcr_title">Bar Code Reading</string>
+    <string name="qrr_title">QR Reading</string>
+    <string name="fpr_title">Finger Print Reading</string>
+    <string name="p_title">Print</string>
+    <string name="peso_sign">&#8369;</string>
+    <string name="amount_title">AMOUNT</string>
+    <string name="pan_title">Permanent Account Number</string>
+    <string name="card_holder_name_title">Card Holder Name</string>
+    <string name="expiry_date_title">Expiry Date</string>
+    <string name="service_code_title">Service Code</string>
+</resources>
