@@ -16,10 +16,6 @@
             android:layout_gravity="center"/>
     </FrameLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_10sdp"/>
-
     <TextView
         android:id="@+id/txt_message"
         android:layout_width="match_parent"

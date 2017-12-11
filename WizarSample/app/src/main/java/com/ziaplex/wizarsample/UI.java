@@ -121,6 +121,10 @@ public class UI {
         return p;
     }
 
+    public static View createFingerPrintView(Context context) {
+        return LayoutInflater.from(context).inflate(R.layout.view_finger_print, null);
+    }
+
     public static void showToastMessage(Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }

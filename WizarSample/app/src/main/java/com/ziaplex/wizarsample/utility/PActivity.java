@@ -16,11 +16,15 @@ import java.io.UnsupportedEncodingException;
 
 public class PActivity extends BaseActivity implements UI.CustomButtonViewListener {
 
+    private String text = "--------------------------------" +
+            "\n\tWizar POS Sample\n\t  Ziaplex Inc." +
+            "\n--------------------------------";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addBaseContentView(UI.createMessageView(this, R.drawable.ic_logo, "Wizar POS Sample\nZiaplex Inc.", null));
         addBaseContentView(UI.createMessageView(this, R.drawable.ic_printer, "Print", this));
+        addBaseContentView(UI.createMessageView(this, R.drawable.ic_logo, text, null));
     }
 
     @Override
@@ -37,7 +41,7 @@ public class PActivity extends BaseActivity implements UI.CustomButtonViewListen
                 Bitmap bitmap = BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.ic_logo);
                 byte[] header = null;
                 try {
-                    header = ("\n\tWizar POS Sample\n\t  Ziaplex Inc.").getBytes("UTF-8");
+                    header = text.getBytes("UTF-8");
                 }
                 catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
@@ -45,7 +49,7 @@ public class PActivity extends BaseActivity implements UI.CustomButtonViewListen
                 PrinterInterface.begin();
                 PrinterBitmapUtil.printBitmap(bitmap, 120, 0, true);
                 write(header);
-                writeLineBreak(5);
+                writeLineBreak(3);
                 PrinterInterface.end();
             }
             else

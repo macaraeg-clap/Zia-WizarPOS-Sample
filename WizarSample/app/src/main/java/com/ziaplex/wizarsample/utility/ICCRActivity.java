@@ -23,8 +23,8 @@ public class ICCRActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addBaseContentView(UI.createCardDetailsView(this, cardDetails));
         addBaseContentView(UI.createMessageView(this, R.drawable.ic_icc, "Please Insert Card", null));
+        addBaseContentView(UI.createCardDetailsView(this, cardDetails));
     }
 
     @Override

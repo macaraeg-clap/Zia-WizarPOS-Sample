@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.ziaplex.wizarsample.R;
@@ -32,8 +31,7 @@ public class BaseActivity extends AppCompatActivity {
     public class CloseActivityBroadcast extends BroadcastReceiver {
 
         public void onReceive(Context arg0, Intent intent) {
-            int closeAll = intent.getIntExtra("closeAll", 0);
-            if (closeAll == 1)
+            if (intent.getIntExtra("closeAll", 0) == 1)
                 finish();
         }
     }

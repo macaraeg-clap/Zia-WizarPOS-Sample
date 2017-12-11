@@ -11,5 +11,6 @@ public class FPRActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addBaseContentView(UI.createMessageView(this, R.drawable.ic_finger_print, "Please Press Your Finger", null));
+        addBaseContentView(UI.createFingerPrintView(this));
     }
 }

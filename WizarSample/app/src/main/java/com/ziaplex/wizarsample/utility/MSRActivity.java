@@ -33,8 +33,8 @@ public class MSRActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addBaseContentView(UI.createCardDetailsView(this, cardDetails));
         addBaseContentView(UI.createMessageView(this, R.drawable.ic_msc, "Please Swipe Card", null));
+        addBaseContentView(UI.createCardDetailsView(this, cardDetails));
         initializeHandler();
     }
 
