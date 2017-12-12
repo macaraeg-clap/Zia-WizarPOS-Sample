@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.ziaplex.wizarsample.R;
+import com.ziaplex.wizarsample.UI;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -21,6 +23,12 @@ public class BaseActivity extends AppCompatActivity {
         BroadcastCloseAll = new CloseActivityBroadcast();
         IntentFilter intentFilter = new IntentFilter("baseActivity");
         registerReceiver(BroadcastCloseAll, intentFilter);
+        addBaseContentView(onCreateMessage());
+        addBaseContentView(UI.createCustomHorizontalSeparator(this));
+    }
+
+    public View onCreateMessage() {
+        return new View(this);
     }
 
     protected void onDestroy() {
@@ -40,5 +48,28 @@ public class BaseActivity extends AppCompatActivity {
         LinearLayout v = findViewById(R.id.container);
         if (v != null)
             v.addView(view);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                exit();
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        exit();
+    }
+
+    public void exit() {
+        Intent intent = new Intent("baseActivity");
+        intent.putExtra("closeAll", 1);
+        sendBroadcast(intent);
     }
 }

@@ -1,11 +1,13 @@
 <resources>
     <string name="app_name">ZIA-WizarPOS</string>
-    <string name="mscr_title">Magnetic Stripe Card Reading</string>
-    <string name="iccr_title">Integrated Circuit Card Reading</string>
-    <string name="bcr_title">Bar Code Reading</string>
-    <string name="qrr_title">QR Reading</string>
-    <string name="fpr_title">Finger Print Reading</string>
-    <string name="p_title">Print</string>
+    <string name="mscr_title">Magnetic Stripe Card Reader</string>
+    <string name="scr_title">Smart Card Reader</string>
+    <string name="pp_title">Pin Pad</string>
+    <string name="iccr_title">Integrated Circuit Card Reader</string>
+    <string name="bcr_title">Bar Code Reader</string>
+    <string name="qrr_title">QR Reader</string>
+    <string name="fpr_title">Finger Print Reader</string>
+    <string name="p_title">Printer</string>
     <string name="peso_sign">&#8369;</string>
     <string name="amount_title">AMOUNT</string>
     <string name="pan_title">Permanent Account Number</string>

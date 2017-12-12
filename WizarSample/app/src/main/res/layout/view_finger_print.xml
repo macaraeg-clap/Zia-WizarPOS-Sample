@@ -17,6 +17,7 @@
         android:padding="@dimen/_10sdp">
 
         <ImageView
+            android:id="@+id/img_finger_print"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="fitCenter"

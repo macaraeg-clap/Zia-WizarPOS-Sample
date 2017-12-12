@@ -4,6 +4,10 @@
 
     <uses-permission android:name="android.permission.CLOUDPOS_MSR"/>
     <uses-permission android:name="android.permission.CLOUDPOS_PRINTER"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.CLOUDPOS_FINGERPRINT"/>
+    <uses-permission android:name="android.permission.WIZARPOS_FINGERPRINT"/>
 
     <application
         android:allowBackup="true"
@@ -34,8 +38,20 @@
         </activity>
 
         <activity
-            android:name=".utility.ICCRActivity"
-            android:label="@string/iccr_title"
+            android:name=".utility.SCRActivity"
+            android:label="@string/scr_title"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
+
+        <activity
+            android:name=".utility.PPActivity"
+            android:label="@string/pp_title"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden">

@@ -1,9 +1,9 @@
 package com.ziaplex.wizarsample.utility;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
 import android.widget.TextView;
 
 import com.cloudpos.jniinterface.MSRInterface;
@@ -12,39 +12,30 @@ import com.ziaplex.wizarsample.R;
 import com.ziaplex.wizarsample.UI;
 import com.ziaplex.wizarsample.Util;
 
-import static com.cloudpos.jniinterface.MSRInterface.getTrackData;
-import static com.cloudpos.jniinterface.MSRInterface.getTrackDataLength;
-import static com.cloudpos.jniinterface.MSRInterface.getTrackError;
-
 public class MSRActivity extends BaseActivity {
-
-    private static final int MSGID_SHOW_MESSAGE = 0;
-    private Handler handler;
-    private CardDetails cardDetails;
 
     public MSRActivity() {
         cardDetails = new CardDetails();
-        cardDetails.setPan("xxxx xxxx xxxx 0000");
+        cardDetails.setPan("xxxxxxxxxxxx0000");
         cardDetails.setCardHolderName("Card Holder Name");
         cardDetails.setExpiryDate("0000");
         cardDetails.setServiceCode("12345");
     }
 
+    private static final int MSG_ID_SHOW_MESSAGE = 0;
+    private Handler handler;
+    private CardDetails cardDetails;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addBaseContentView(UI.createMessageView(this, R.drawable.ic_msc, "Please Swipe Card", null));
         addBaseContentView(UI.createCardDetailsView(this, cardDetails));
-        initializeHandler();
-    }
-
-    private void initializeHandler() {
         handler = new Handler(new Handler.Callback() {
 
             @Override
             public boolean handleMessage(Message msg) {
                 switch (msg.what) {
-                    case MSGID_SHOW_MESSAGE:
+                    case MSG_ID_SHOW_MESSAGE:
                         displayCardDetails(msg.obj.toString());
                         break;
                     default:
@@ -53,7 +44,22 @@ public class MSRActivity extends BaseActivity {
                 return false;
             }
         });
-        Thread thread = new Thread() {
+        executeMSReader();
+    }
+
+    @Override
+    public View onCreateMessage() {
+        return UI.createMessageView(this, R.drawable.ic_msc, "Please Swipe Card", null);
+    }
+
+    @Override
+    public void exit() {
+        MSRInterface.close();
+        super.exit();
+    }
+
+    private void executeMSReader() {
+        new Thread() {
 
             @Override
             public void run() {
@@ -64,30 +70,29 @@ public class MSRActivity extends BaseActivity {
 
                             @Override
                             public void run() {
-                                handler.obtainMessage(MSGID_SHOW_MESSAGE, "Please Swipe Card").sendToTarget();
                                 boolean retry = true;
                                 while (retry) {
                                     retry = false;
                                     int MSRopenresult = MSRInterface.open();
                                     if (MSRopenresult >= 0) {
                                         try {
-                                            MSRInterface.waitForSwipe(60000);
+                                            MSRInterface.waitForSwipe(50000);
                                         }
                                         catch (InterruptedException e) {
                                             e.printStackTrace();
                                         }
-                                        if (MSRInterface.eventID == MSRInterface.MSR_CARD_EVENT_FOUND_CARD) {
+                                        if (MSRInterface.eventID == MSRInterface.CONTACTLESS_CARD_EVENT_FOUND_CARD) {
                                             if (!parseTrackData())
                                                 retry = true;
                                             else
-                                                handler.obtainMessage(MSGID_SHOW_MESSAGE, "Magnetic Stripe Card Details reading successful...").sendToTarget();
+                                                handler.obtainMessage(MSG_ID_SHOW_MESSAGE, "Magnetic Stripe Card Details Reading Successful").sendToTarget();
                                         }
                                         else
                                             retry = true;
                                         MSRInterface.close();
                                     }
                                     else
-                                        handler.obtainMessage(MSGID_SHOW_MESSAGE, "Device open failed... Code:" + Integer.toHexString(MSRopenresult)).sendToTarget();
+                                        handler.obtainMessage(MSG_ID_SHOW_MESSAGE, "Code:" + Integer.toHexString(MSRopenresult) + " (Device Open failed)").sendToTarget();
                                 }
                             }
                         });
@@ -98,11 +103,15 @@ public class MSRActivity extends BaseActivity {
                     e.printStackTrace();
                 }
             }
-        };
-        thread.start();
+        }.start();
     }
 
     private void displayCardDetails(String message) {
+        {
+            TextView v = findViewById(R.id.txt_message);
+            if (v != null)
+                v.setText(message);
+        }
         {
             TextView v = findViewById(R.id.txt_pan);
             if (v != null)
@@ -123,30 +132,25 @@ public class MSRActivity extends BaseActivity {
             if (v != null)
                 v.setText(cardDetails.getServiceCode());
         }
-        {
-            TextView v = findViewById(R.id.txt_message);
-            if (v != null)
-                v.setText(message);
-        }
     }
 
     private boolean parseTrackData() {
         String Info = "Please Swipe Again!";
         int result, trackNo = 0;
-        result = getTrackError(trackNo);
+        result = MSRInterface.getTrackError(trackNo);
         if (result < 0) {
-            handler.obtainMessage(MSGID_SHOW_MESSAGE, Info).sendToTarget();
+            handler.obtainMessage(MSG_ID_SHOW_MESSAGE, Info).sendToTarget();
             return false;
         }
-        result = getTrackDataLength(trackNo);
+        result = MSRInterface.getTrackDataLength(trackNo);
         if (result < 0) {
-            handler.obtainMessage(MSGID_SHOW_MESSAGE, Info).sendToTarget();
+            handler.obtainMessage(MSG_ID_SHOW_MESSAGE, Info).sendToTarget();
             return false;
         }
         byte[] stripInfo = new byte[result];
-        result = getTrackData(trackNo, stripInfo, stripInfo.length);
+        result = MSRInterface.getTrackData(trackNo, stripInfo, stripInfo.length);
         if (result < 0) {
-            handler.obtainMessage(MSGID_SHOW_MESSAGE, Info).sendToTarget();
+            handler.obtainMessage(MSG_ID_SHOW_MESSAGE, Info).sendToTarget();
             return false;
         }
         cardDetails.setPan(Util.getStripInfoPAN(stripInfo));
@@ -154,17 +158,5 @@ public class MSRActivity extends BaseActivity {
         cardDetails.setExpiryDate(Util.getStripInfoDetails(stripInfo, 2, -1, 0, 4));
         cardDetails.setServiceCode(Util.getStripInfoDetails(stripInfo, 2, -1, 5, 3));
         return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        exit();
-    }
-
-    private void exit() {
-        MSRInterface.close();
-        Intent intent = new Intent("baseActivity");
-        intent.putExtra("closeAll", 1);
-        sendBroadcast(intent);
     }
 }

@@ -7,6 +7,26 @@ import java.util.StringTokenizer;
 
 public class Util {
 
+    public static String byteArrayToString(byte[] arryByte, int nDataLength) {
+        String strOut = "";
+        for (int i = 0; i < nDataLength; i++)
+            strOut += String.format("%02X ", arryByte[i]);
+        return strOut;
+    }
+
+    public static String byteArrayToString(byte[] arryByte, int offset, int nDataLength) {
+        String strOut = "";
+        try {
+            for(int i = offset; i < nDataLength; i++)
+                strOut += String.format("%02X ", arryByte[i]);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            strOut = "";
+        }
+        return strOut;
+    }
+
     public static String convertToCurrency(Context context, double value) {
         String currencyValue = "0.00";
         if (value > 0.0) {

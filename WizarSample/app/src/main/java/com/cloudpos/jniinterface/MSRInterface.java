@@ -9,7 +9,7 @@ public class MSRInterface {
         JNILoad.jniLoad(fileName);
     }
 
-    public static int MSR_CARD_EVENT_FOUND_CARD = 0, MSR_CARD_EVENT_USER_CANCEL = 3;
+    public static int CONTACTLESS_CARD_EVENT_FOUND_CARD = 0, CONTACTLESS_CARD_EVENT_USER_CANCEL = 3;
 
     public synchronized native static int open();
 
@@ -34,7 +34,7 @@ public class MSRInterface {
         }
     }*/
 
-    public static final int EVENT_NONE = -1;
+    private static final int EVENT_NONE = -1;
     public static Object object = new Object();
     public static int eventID = EVENT_NONE;
 
@@ -47,7 +47,6 @@ public class MSRInterface {
     }
 
     public static void waitForSwipe(int timeout) throws InterruptedException {
-        clear();
         synchronized (object) {
             object.wait(timeout);
         }
@@ -56,7 +55,7 @@ public class MSRInterface {
     public static void cancelWait() {
         synchronized (object) {
             object.notifyAll();
-            eventID = MSR_CARD_EVENT_USER_CANCEL;
+            eventID = CONTACTLESS_CARD_EVENT_USER_CANCEL;
         }
     }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -97,8 +98,12 @@ public class UI {
         if (p != null) {
             {
                 ImageView v = p.findViewById(R.id.img_icon);
-                if (v != null)
-                    v.setImageResource(iconResourceId);
+                if (v != null) {
+                    if (iconResourceId < 0)
+                        ((ViewManager) v.getParent()).removeView(v);
+                    else
+                        v.setImageResource(iconResourceId);
+                }
             }
             {
                 TextView v = p.findViewById(R.id.txt_message);
@@ -127,5 +132,14 @@ public class UI {
 
     public static void showToastMessage(Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public static View createCustomHorizontalSeparator(Context context) {
+        View v = new View(context);
+        LinearLayout.LayoutParams l = getLinearLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) context.getResources().getDimension(R.dimen._1sdp));
+        l.setMargins(0, (int) context.getResources().getDimension(R.dimen._5sdp), 0, (int) context.getResources().getDimension(R.dimen._5sdp));
+        v.setLayoutParams(l);
+        v.setBackgroundColor(ContextCompat.getColor(context, R.color.colorGrey));
+        return v;
     }
 }

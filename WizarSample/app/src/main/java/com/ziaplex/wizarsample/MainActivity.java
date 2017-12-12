@@ -9,7 +9,8 @@ import android.widget.LinearLayout;
 
 import com.ziaplex.wizarsample.utility.BCRActivity;
 import com.ziaplex.wizarsample.utility.FPRActivity;
-import com.ziaplex.wizarsample.utility.ICCRActivity;
+import com.ziaplex.wizarsample.utility.PPActivity;
+import com.ziaplex.wizarsample.utility.SCRActivity;
 import com.ziaplex.wizarsample.utility.MSRActivity;
 import com.ziaplex.wizarsample.utility.PActivity;
 import com.ziaplex.wizarsample.utility.QRRActivity;
@@ -24,7 +25,9 @@ public class MainActivity extends AppCompatActivity implements UI.CustomButtonVi
         setContentView(R.layout.activity_main);
         addButton(UI.createCustomButtonView(this, R.drawable.ic_msc, getString(R.string.mscr_title), this));
         addButton(UI.createCustomView(this, LinearLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen._10sdp)));
-        addButton(UI.createCustomButtonView(this, R.drawable.ic_icc, getString(R.string.iccr_title), this));
+        addButton(UI.createCustomButtonView(this, R.drawable.ic_sc, getString(R.string.scr_title), this));
+        addButton(UI.createCustomView(this, LinearLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen._10sdp)));
+        addButton(UI.createCustomButtonView(this, R.drawable.ic_pad, getString(R.string.pp_title), this));
         addButton(UI.createCustomView(this, LinearLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen._10sdp)));
         addButton(UI.createCustomButtonView(this, R.drawable.ic_barcode, getString(R.string.bcr_title), this));
         addButton(UI.createCustomView(this, LinearLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen._10sdp)));
@@ -35,8 +38,6 @@ public class MainActivity extends AppCompatActivity implements UI.CustomButtonVi
         addButton(UI.createCustomButtonView(this, R.drawable.ic_printer, getString(R.string.p_title), this));
         showLoadingView(false);
     }
-
-
 
     private void addButton(View view) {
         LinearLayout v = findViewById(R.id.action_container);
@@ -50,8 +51,10 @@ public class MainActivity extends AppCompatActivity implements UI.CustomButtonVi
         Class activity;
         if (getString(R.string.mscr_title).equals(text))
             activity = MSRActivity.class;
-        else if (getString(R.string.iccr_title).equals(text))
-            activity = ICCRActivity.class;
+        else if (getString(R.string.scr_title).equals(text))
+            activity = SCRActivity.class;
+        else if (getString(R.string.pp_title).equals(text))
+            activity = PPActivity.class;
         else if (getString(R.string.bcr_title).equals(text))
             activity = BCRActivity.class;
         else if (getString(R.string.qrr_title).equals(text))
