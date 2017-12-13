@@ -93,11 +93,18 @@ public class UI {
         return p;
     }
 
-    public static View createMessageView(Context context, int iconResourceId, final String message, final CustomButtonViewListener listener) {
-        final LinearLayout p = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.view_custom_message, null);
-        if (p != null) {
+    public static class MessageView extends FrameLayout {
+
+        public MessageView(Context context) {
+            super(context);
+        }
+
+        public void onCreate(int iconResourceId, final String message, final CustomButtonViewListener listener) {
+            LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            if (li != null)
+                li.inflate(R.layout.view_custom_message, this, true);
             {
-                ImageView v = p.findViewById(R.id.img_icon);
+                ImageView v = findViewById(R.id.img_icon);
                 if (v != null) {
                     if (iconResourceId < 0)
                         ((ViewManager) v.getParent()).removeView(v);
@@ -106,24 +113,36 @@ public class UI {
                 }
             }
             {
-                TextView v = p.findViewById(R.id.txt_message);
+                final MessageView mThis = this;
+                TextView v = findViewById(R.id.txt_message);
                 if (v != null) {
                     v.setText(message);
                     if (listener != null) {
-                        v.setTextColor(ContextCompat.getColor(context, R.color.colorWhite));
-                        v.setBackground(context.getResources().getDrawable(R.drawable.border_button));
+                        v.setTextColor(ContextCompat.getColor(getContext(), R.color.colorWhite));
+                        v.setBackground(getContext().getResources().getDrawable(R.drawable.border_button));
                         v.setOnClickListener(new View.OnClickListener() {
 
                             @Override
                             public void onClick(View view) {
-                                listener.onButtonClick(p, message);
+                                listener.onButtonClick(mThis, message);
                             }
                         });
                     }
                 }
             }
         }
-        return p;
+
+        public void setMessage(String message) {
+            TextView v = findViewById(R.id.txt_message);
+            if (v != null)
+                v.setText(message);
+        }
+    }
+
+    public static MessageView createMessageView(Context context, int iconResourceId, final String message, final CustomButtonViewListener listener) {
+        MessageView v = new MessageView(context);
+        v.onCreate(iconResourceId, message, listener);
+        return v;
     }
 
     public static View createFingerPrintView(Context context) {
