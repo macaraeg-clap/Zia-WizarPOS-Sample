@@ -31,14 +31,13 @@ public class QRRActivity extends BaseActivity implements UI.CustomButtonViewList
     @Override
     public void onButtonClick(View view, String text) {
         ScanParameter parameter = new ScanParameter();
-        parameter.set(ScanParameter.KEY_DECODEFORMAT, "QR");
+        parameter.set(ScanParameter.KEY_DECODEFORMAT, "QR, Code128");
         try {
             ScanResult result = scanService.scanBarcode(parameter);
             if (messageView != null)
                 messageView.setMessage("RESULT\n--------------------------------\n" + result + "\n--------------------------------");
         }
         catch (RemoteException e) {
-
             e.printStackTrace();
         }
     }
