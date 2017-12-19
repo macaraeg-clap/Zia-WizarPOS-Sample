@@ -1,6 +1,5 @@
 package com.ziaplex.wizarsample.utility;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -38,7 +37,7 @@ public class PPActivity extends BaseActivity implements UI.CustomButtonViewListe
                     case TIMEOUT_SHOW_MESSAGE:
                         displayResult("Timeout! Please Try Again");
                     case SUCCESS:
-                        //displayResult(msg.obj.toString());
+                        displayResult(msg.obj.toString());
                         break;
                     default:
                         break;
@@ -69,46 +68,33 @@ public class PPActivity extends BaseActivity implements UI.CustomButtonViewListe
     }
 
     private void executePinPad() {
-        new DialogInterface.OnClickListener() {
+        new Thread() {
 
             @Override
-            public void onClick(final DialogInterface dialog, final int which) {
-                new Thread() {
-
-                    @Override
-                    public void run() {
-                        int masterKeyID = 0, userKeyID, calculatePINBlockResult = 0, hardWareErrorCode = 0, softWareErrorCode = 0;
-                        byte[] arryPINblock = new byte[18];
-                        String PINBlockResult = null;
-                        int result = PINPadInterface.open();
-                        if (result >= 0) {
-                            userKeyID = 0;
-                            selectKey(masterKeyID, userKeyID);
-                            System.out.println("************************************************ calculatePINBlockResult: " + calculatePINBlockResult);
-                            calculatePINBlockResult = PINPadInterface.calculatePINBlock(pan.getBytes(), pan.length(), arryPINblock, -1, 0);
-                            PINBlockResult = Util.byteArrayToString(arryPINblock, calculatePINBlockResult);
-                            hardWareErrorCode = ErrorCodeTransfer.transfer2HardwareErrorCode(calculatePINBlockResult);
-                            softWareErrorCode = ErrorCodeTransfer.transfer2SoftwareErrorCode(calculatePINBlockResult);
-                        }
-                        else
-                            handler.obtainMessage(MSG_ID_SHOW_MESSAGE).sendToTarget();
-                        if (calculatePINBlockResult >= 0) {
-                            PINPadInterface.close();
-                            System.out.println("************************************************ Pin Block: " + PINBlockResult);
-                            //handler.obtainMessage(SUCCESS, PINBlockResult).sendToTarget();
-                        }
-                        else if (hardWareErrorCode == HardwareErrorCode.USER_CANCEL) {
-                            PINPadInterface.close();
-                            handler.obtainMessage(USER_CANCEL_SHOW_MESSAGE).sendToTarget();
-                        }
-                        else if (softWareErrorCode == SoftwareErrorCode.ETIMEDOUT) {
-                            PINPadInterface.close();
-                            handler.obtainMessage(TIMEOUT_SHOW_MESSAGE).sendToTarget();
-                        }
-                    }
-                }.start();
+            public void run() {
+                int masterKeyID = 0, userKeyID, calculatePINBlockResult = 0, hardWareErrorCode = 0, softWareErrorCode = 0;
+                byte[] arryPINblock = new byte[18];
+                String PINBlockResult = null;
+                int result = PINPadInterface.open();
+                if (result >= 0) {
+                    userKeyID = 0;
+                    selectKey(masterKeyID, userKeyID);
+                    calculatePINBlockResult = PINPadInterface.calculatePINBlock(pan.getBytes(), pan.length(), arryPINblock, -1, 0);
+                    PINBlockResult = Util.byteArrayToString(arryPINblock, calculatePINBlockResult);
+                    hardWareErrorCode = ErrorCodeTransfer.transfer2HardwareErrorCode(calculatePINBlockResult);
+                    softWareErrorCode = ErrorCodeTransfer.transfer2SoftwareErrorCode(calculatePINBlockResult);
+                }
+                else
+                    handler.obtainMessage(MSG_ID_SHOW_MESSAGE).sendToTarget();
+                if (calculatePINBlockResult >= 0)
+                    handler.obtainMessage(SUCCESS, PINBlockResult).sendToTarget();
+                else if (hardWareErrorCode == HardwareErrorCode.USER_CANCEL)
+                    handler.obtainMessage(USER_CANCEL_SHOW_MESSAGE).sendToTarget();
+                else if (softWareErrorCode == SoftwareErrorCode.ETIMEDOUT)
+                    handler.obtainMessage(TIMEOUT_SHOW_MESSAGE).sendToTarget();
+                PINPadInterface.close();
             }
-        };
+        }.start();
     }
 
     private void selectKey(final int masterKeyID, final int userKeyID) {

@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 
@@ -456,6 +458,8 @@ public class PActivity extends BaseActivity implements UI.CustomButtonViewListen
         }
     }
 
+    private static final int MSG_ID_SHOW_MESSAGE = 0;
+    private Handler handler;
     private String text = "--------------------------------" +
             "\n\tWizar POS Sample\n\t  Ziaplex Inc." +
             "\n--------------------------------" +
@@ -466,6 +470,20 @@ public class PActivity extends BaseActivity implements UI.CustomButtonViewListen
         super.onCreate(savedInstanceState);
         addBaseContentView(UI.createMessageView(this, R.drawable.ic_logo, text, null));
         addBaseContentView(UI.createCustomHorizontalSeparator(this));
+        handler = new Handler(new Handler.Callback() {
+
+            @Override
+            public boolean handleMessage(Message msg) {
+                switch (msg.what) {
+                    case MSG_ID_SHOW_MESSAGE:
+                        UI.showToastMessage(getBaseContext(), msg.obj.toString());
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -488,25 +506,30 @@ public class PActivity extends BaseActivity implements UI.CustomButtonViewListen
 
         @Override
         public void run() {
-            int print = PrinterInterface.open();
-            if (print >= 0) {
-                Bitmap bitmap = BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.ic_logo);
-                byte[] value = null;
-                try {
-                    value = text.getBytes("UTF-8");
+            try {
+                int print = PrinterInterface.open();
+                if (print >= 0) {
+                    Bitmap bitmap = BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.ic_logo);
+                    byte[] value = null;
+                    try {
+                        value = text.getBytes("UTF-8");
+                    }
+                    catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    PrinterInterface.begin();
+                    PrinterBitmapUtil.printBitmap(bitmap, 120, 0, true);
+                    write(value);
+                    writeLineBreak(5);
+                    PrinterInterface.end();
                 }
-                catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                PrinterInterface.begin();
-                PrinterBitmapUtil.printBitmap(bitmap, 120, 0, true);
-                write(value);
-                writeLineBreak(5);
-                PrinterInterface.end();
+                else
+                    handler.obtainMessage(MSG_ID_SHOW_MESSAGE, "No Printer Detected").sendToTarget();
+                PrinterInterface.close();
             }
-            else
-                UI.showToastMessage(getBaseContext(), "Print failed please try again!");
-            PrinterInterface.close();
+            catch (RuntimeException e) {
+                e.printStackTrace();
+            }
         }
     };
 

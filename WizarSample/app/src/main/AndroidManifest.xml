@@ -2,12 +2,24 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.ziaplex.wizarsample">
 
+    <!-- MSR -->
     <uses-permission android:name="android.permission.CLOUDPOS_MSR"/>
+
+    <!-- Printer -->
     <uses-permission android:name="android.permission.CLOUDPOS_PRINTER"/>
+
+    <!-- Finger Print -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
     <uses-permission android:name="android.permission.CLOUDPOS_FINGERPRINT"/>
     <uses-permission android:name="android.permission.WIZARPOS_FINGERPRINT"/>
+
+    <!-- PIN Pad -->
+    <uses-permission android:name="android.permission.CLOUDPOS_PIN_GET_PIN_BLOCK"/>
+    <uses-permission android:name="android.permission.CLOUDPOS_PIN_MAC"/>
+    <uses-permission android:name="android.permission.CLOUDPOS_PIN_ENCRYPT_DATA"/>
+    <uses-permission android:name="android.permission.CLOUDPOS_PIN_UPDATE_USER_KEY"/>
+    <uses-permission android:name="android.permission.CLOUDPOS_PIN_UPDATE_MASTER_KEY"/>
 
     <application
         android:allowBackup="true"
@@ -29,7 +41,6 @@
             android:name=".utility.MSRActivity"
             android:label="@string/mscr_title"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden">
 
             <meta-data
@@ -41,7 +52,6 @@
             android:name=".utility.SCRActivity"
             android:label="@string/scr_title"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden">
 
             <meta-data
@@ -53,7 +63,6 @@
             android:name=".utility.PPActivity"
             android:label="@string/pp_title"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden">
 
             <meta-data
@@ -65,7 +74,6 @@
             android:name=".utility.BCRActivity"
             android:label="@string/bcr_title"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden">
 
             <meta-data
@@ -77,7 +85,6 @@
             android:name=".utility.QRRActivity"
             android:label="@string/qrr_title"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden">
 
             <meta-data
@@ -89,7 +96,6 @@
             android:name=".utility.FPRActivity"
             android:label="@string/fpr_title"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden">
 
             <meta-data
@@ -101,7 +107,6 @@
             android:name=".utility.PActivity"
             android:label="@string/p_title"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden">
 
             <meta-data
