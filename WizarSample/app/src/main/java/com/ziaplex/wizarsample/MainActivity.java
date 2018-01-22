@@ -24,8 +24,8 @@ public class MainActivity extends AppCompatActivity implements UI.CustomButtonVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         addButton(UI.createCustomButtonView(this, R.drawable.ic_msc, getString(R.string.mscr_title), this));
-        addButton(UI.createCustomView(this, LinearLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen._10sdp)));
-        addButton(UI.createCustomButtonView(this, R.drawable.ic_sc, getString(R.string.scr_title), this));
+        //addButton(UI.createCustomView(this, LinearLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen._10sdp)));
+        //addButton(UI.createCustomButtonView(this, R.drawable.ic_sc, getString(R.string.scr_title), this));
         addButton(UI.createCustomView(this, LinearLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen._10sdp)));
         addButton(UI.createCustomButtonView(this, R.drawable.ic_pad, getString(R.string.pp_title), this));
         addButton(UI.createCustomView(this, LinearLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen._10sdp)));

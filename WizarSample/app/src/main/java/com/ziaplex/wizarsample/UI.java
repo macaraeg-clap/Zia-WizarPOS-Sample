@@ -149,6 +149,10 @@ public class UI {
         return LayoutInflater.from(context).inflate(R.layout.view_finger_print, null);
     }
 
+    public static View createCustomQRCodeImageView(Context context) {
+        return LayoutInflater.from(context).inflate(R.layout.view_custom_qrcode, null);
+    }
+
     public static void showToastMessage(Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }

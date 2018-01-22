@@ -3,13 +3,21 @@ package com.ziaplex.wizarsample.utility;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.cloudpos.jniinterface.PrinterInterface;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import com.ziaplex.wizarsample.R;
 import com.ziaplex.wizarsample.UI;
 
@@ -468,7 +476,9 @@ public class PActivity extends BaseActivity implements UI.CustomButtonViewListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addBaseContentView(UI.createMessageView(this, R.drawable.ic_logo, text, null));
+        addBaseContentView(UI.createCustomView(this, LinearLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen._10sdp)));
+        addBaseContentView(UI.createCustomQRCodeImageView(this));
+        addBaseContentView(UI.createMessageView(this, -1, text, null));
         addBaseContentView(UI.createCustomHorizontalSeparator(this));
         handler = new Handler(new Handler.Callback() {
 
@@ -509,7 +519,7 @@ public class PActivity extends BaseActivity implements UI.CustomButtonViewListen
             try {
                 int print = PrinterInterface.open();
                 if (print >= 0) {
-                    Bitmap bitmap = BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.ic_logo);
+                    Bitmap qrBitmap = BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.static_qr_code_without_logo);
                     byte[] value = null;
                     try {
                         value = text.getBytes("UTF-8");
@@ -518,7 +528,7 @@ public class PActivity extends BaseActivity implements UI.CustomButtonViewListen
                         e.printStackTrace();
                     }
                     PrinterInterface.begin();
-                    PrinterBitmapUtil.printBitmap(bitmap, 120, 0, true);
+                    PrinterBitmapUtil.printBitmap(qrBitmap, 25, 0, true);
                     write(value);
                     writeLineBreak(5);
                     PrinterInterface.end();
