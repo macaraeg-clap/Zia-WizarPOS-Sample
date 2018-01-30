@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.ziaplex.wizarsample.utility.BCRActivity;
+import com.ziaplex.wizarsample.utility.CDActivity;
 import com.ziaplex.wizarsample.utility.FPRActivity;
 import com.ziaplex.wizarsample.utility.PPActivity;
 import com.ziaplex.wizarsample.utility.SCRActivity;
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements UI.CustomButtonVi
         addButton(UI.createCustomButtonView(this, R.drawable.ic_finger_print, getString(R.string.fpr_title), this));
         addButton(UI.createCustomView(this, LinearLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen._10sdp)));
         addButton(UI.createCustomButtonView(this, R.drawable.ic_printer, getString(R.string.p_title), this));
+        //addButton(UI.createCustomView(this, LinearLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen._10sdp)));
+        //addButton(UI.createCustomButtonView(this, R.drawable.ic_cash_drawer, getString(R.string.cd_title), this));
         showLoadingView(false);
     }
 
@@ -61,8 +64,10 @@ public class MainActivity extends AppCompatActivity implements UI.CustomButtonVi
             activity = QRRActivity.class;
         else if (getString(R.string.fpr_title).equals(text))
             activity = FPRActivity.class;
-        else
+        else if (getString(R.string.p_title).equals(text))
             activity = PActivity.class;
+        else
+            activity = CDActivity.class;
         mView = view;
         startActivityForResult(new Intent(this, activity), 1);
     }

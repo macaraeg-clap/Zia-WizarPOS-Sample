@@ -22,7 +22,9 @@ public class FPRActivity extends BaseActivity {
 
     private static final int MSG_ID_SHOW_MESSAGE = 0, MSG_ID_SHOW_IMAGE = 1;
     private Handler handler;
+    private Thread thread;
     private String path0, path1;
+    volatile boolean stop = false;
 
     public FPRActivity() {
         path0 = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/tmp";
@@ -40,6 +42,7 @@ public class FPRActivity extends BaseActivity {
                 switch (msg.what) {
                     case MSG_ID_SHOW_MESSAGE:
                         UI.showToastMessage(getBaseContext(), msg.obj.toString());
+                        displayNotSupported();
                         break;
                     case MSG_ID_SHOW_IMAGE:
                         displayFingerPrint((Bitmap) msg.obj);
@@ -51,6 +54,12 @@ public class FPRActivity extends BaseActivity {
             }
         });
         executeFPReader();
+    }
+
+    private void displayNotSupported() {
+        TextView v = findViewById(R.id.txt_message);
+        if (v != null)
+            v.setText("Finger Print Reading is not Supported in this device...");
     }
 
     private void displayFingerPrint(Bitmap image) {
@@ -75,12 +84,17 @@ public class FPRActivity extends BaseActivity {
 
     @Override
     public void exit() {
+        stop = true;
+        if (thread != null) {
+            if (thread.isAlive())
+                thread.interrupt();
+        }
         FingerPrintInterface.close();
         super.exit();
     }
 
     private void executeFPReader() {
-        new Thread() {
+        thread = new Thread() {
 
             @Override
             public void run() {
@@ -113,24 +127,21 @@ public class FPRActivity extends BaseActivity {
                                         opts.outHeight = pImgHeight[0];
                                         handler.obtainMessage(MSG_ID_SHOW_IMAGE, BitmapFactory.decodeByteArray(pImgBuffer, 0, pRealImaLength[0], opts)).sendToTarget();
                                     }
-                                }
-                                catch (IOException e) {
+                                } catch (IOException e) {
                                     e.printStackTrace();
                                 }
-                            }
-                            catch (FileNotFoundException e) {
+                            } catch (FileNotFoundException e) {
                                 e.printStackTrace();
                             }
                             FingerPrintInterface.close();
                         }
-                    }
-                    else
+                    } else
                         handler.obtainMessage(MSG_ID_SHOW_MESSAGE, "Code:" + Integer.toHexString(FPRopenresult) + " (Device Open failed)").sendToTarget();
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        }.start();
+        };
+        thread.start();
     }
 }

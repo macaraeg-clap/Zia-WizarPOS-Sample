@@ -13,22 +13,32 @@ import com.ziaplex.wizarsample.errorcode.HardwareErrorCode;
 import com.ziaplex.wizarsample.errorcode.SoftwareErrorCode;
 import com.ziaplex.wizarsample.Util;
 
-public class PPActivity extends BaseActivity implements UI.CustomButtonViewListener { // FIXME
+public class PPActivity extends BaseActivity implements UI.CustomButtonViewListener {
 
-    private static final int MSG_ID_SHOW_MESSAGE = 0, USER_CANCEL_SHOW_MESSAGE = 1, TIMEOUT_SHOW_MESSAGE = -1, SUCCESS = 2;
-    private final String pan = "4834422003052719";
+    private static final int MSG_ID_ERROR_MESSAGE = 0, USER_CANCEL_SHOW_MESSAGE = 1, TIMEOUT_SHOW_MESSAGE = -1, SUCCESS = 2, MSG_ID_OPEN_MESSAGE = 3;
+    private UI.MessageView messageView;
+    private UI.MessageView buttonView;
     private Handler handler;
+    private Thread thread;
+    private final String pan = "4834422003052719";
+    volatile boolean stop = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addBaseContentView(UI.createMessageView(this, -1, "PAN : " + pan, null));
+        addBaseContentView(messageView = UI.createMessageView(this, -1, "PAN : " + pan, null));
         handler = new Handler(new Handler.Callback() {
 
             @Override
             public boolean handleMessage(Message msg) {
                 switch (msg.what) {
-                    case MSG_ID_SHOW_MESSAGE:
+                    case MSG_ID_OPEN_MESSAGE:
+                        if (buttonView != null) {
+                            buttonView.setMessage("Please enter PIN in the provided Pad...");
+                            buttonView.setDisabled(true);
+                        }
+                        break;
+                    case MSG_ID_ERROR_MESSAGE:
                         displayResult("PINPad open failed！ Please Try Again");
                         break;
                     case USER_CANCEL_SHOW_MESSAGE:
@@ -37,7 +47,18 @@ public class PPActivity extends BaseActivity implements UI.CustomButtonViewListe
                     case TIMEOUT_SHOW_MESSAGE:
                         displayResult("Timeout! Please Try Again");
                     case SUCCESS:
-                        displayResult(msg.obj.toString());
+                        if (buttonView != null) {
+                            Object result = msg.obj;
+                            if (result != null) {
+                                if (result instanceof String && messageView != null)
+                                    messageView.setMessage("RESULT\n\n" + result.toString() + "\n");
+                                buttonView.setMessage("Start");
+                                buttonView.setDisabled(false);
+                            } else {
+                                buttonView.setMessage("PIN Pad is not Supported in this device...");
+                                buttonView.setDisabled(true);
+                            }
+                        }
                         break;
                     default:
                         break;
@@ -49,16 +70,23 @@ public class PPActivity extends BaseActivity implements UI.CustomButtonViewListe
 
     @Override
     public View onCreateMessage() {
-        return UI.createMessageView(this, R.drawable.ic_pad, "Start", this);
+        return buttonView = UI.createMessageView(this, R.drawable.ic_pad, "Start", this);
     }
 
     @Override
     public void onButtonClick(View view, String text) {
+        if (messageView != null)
+            messageView.setMessage("PAN : " + pan);
         executePinPad();
     }
 
     @Override
     public void exit() {
+        stop = true;
+        if (thread != null) {
+            if (thread.isAlive())
+                thread.interrupt();
+        }
         PINPadInterface.close();
         super.exit();
     }
@@ -68,7 +96,7 @@ public class PPActivity extends BaseActivity implements UI.CustomButtonViewListe
     }
 
     private void executePinPad() {
-        new Thread() {
+        thread = new Thread() {
 
             @Override
             public void run() {
@@ -77,15 +105,15 @@ public class PPActivity extends BaseActivity implements UI.CustomButtonViewListe
                 String PINBlockResult = null;
                 int result = PINPadInterface.open();
                 if (result >= 0) {
+                    handler.obtainMessage(MSG_ID_OPEN_MESSAGE).sendToTarget();
                     userKeyID = 0;
                     selectKey(masterKeyID, userKeyID);
                     calculatePINBlockResult = PINPadInterface.calculatePINBlock(pan.getBytes(), pan.length(), arryPINblock, -1, 0);
                     PINBlockResult = Util.byteArrayToString(arryPINblock, calculatePINBlockResult);
                     hardWareErrorCode = ErrorCodeTransfer.transfer2HardwareErrorCode(calculatePINBlockResult);
                     softWareErrorCode = ErrorCodeTransfer.transfer2SoftwareErrorCode(calculatePINBlockResult);
-                }
-                else
-                    handler.obtainMessage(MSG_ID_SHOW_MESSAGE).sendToTarget();
+                } else
+                    handler.obtainMessage(MSG_ID_ERROR_MESSAGE).sendToTarget();
                 if (calculatePINBlockResult >= 0)
                     handler.obtainMessage(SUCCESS, PINBlockResult).sendToTarget();
                 else if (hardWareErrorCode == HardwareErrorCode.USER_CANCEL)
@@ -94,7 +122,8 @@ public class PPActivity extends BaseActivity implements UI.CustomButtonViewListe
                     handler.obtainMessage(TIMEOUT_SHOW_MESSAGE).sendToTarget();
                 PINPadInterface.close();
             }
-        }.start();
+        };
+        thread.start();
     }
 
     private void selectKey(final int masterKeyID, final int userKeyID) {

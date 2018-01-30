@@ -113,5 +113,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
+
+        <activity
+            android:name=".utility.CDActivity"
+            android:label="@string/cd_title"
+            android:parentActivityName=".MainActivity"
+            android:configChanges="orientation|keyboardHidden">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
     </application>
 </manifest>

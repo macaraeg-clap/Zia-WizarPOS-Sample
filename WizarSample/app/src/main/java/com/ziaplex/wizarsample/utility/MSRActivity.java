@@ -25,6 +25,8 @@ public class MSRActivity extends BaseActivity {
     private static final int MSG_ID_SHOW_MESSAGE = 0;
     private Handler handler;
     private CardDetails cardDetails;
+    private Thread thread;
+    volatile boolean stop = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,56 +56,53 @@ public class MSRActivity extends BaseActivity {
 
     @Override
     public void exit() {
+        stop = true;
+        if (thread != null) {
+            if (thread.isAlive())
+                thread.interrupt();
+        }
         MSRInterface.close();
         super.exit();
     }
 
     private void executeMSReader() {
-        new Thread() {
+        thread = new Thread() {
 
             @Override
             public void run() {
-                try {
-                    synchronized (this) {
-                        wait(5000);
-                        runOnUiThread(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                boolean retry = true;
-                                while (retry) {
-                                    retry = false;
-                                    int MSRopenresult = MSRInterface.open();
-                                    if (MSRopenresult >= 0) {
-                                        try {
-                                            MSRInterface.waitForSwipe(50000);
-                                        }
-                                        catch (InterruptedException e) {
-                                            e.printStackTrace();
-                                        }
-                                        if (MSRInterface.eventID == MSRInterface.CONTACTLESS_CARD_EVENT_FOUND_CARD) {
-                                            if (!parseTrackData())
-                                                retry = true;
-                                            else
-                                                handler.obtainMessage(MSG_ID_SHOW_MESSAGE, "Magnetic Stripe Card Details Reading Successful").sendToTarget();
-                                        }
-                                        else
-                                            retry = true;
-                                        MSRInterface.close();
+                while (!stop) {
+                    try {
+                        synchronized (this) {
+                            wait(1000);
+                            boolean retry = true;
+                            while (retry) {
+                                retry = false;
+                                int MSRopenresult = MSRInterface.open();
+                                if (MSRopenresult >= 0) {
+                                    try {
+                                        MSRInterface.waitForSwipe(50000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
                                     }
-                                    else
-                                        handler.obtainMessage(MSG_ID_SHOW_MESSAGE, "Code:" + Integer.toHexString(MSRopenresult) + " (Device Open failed)").sendToTarget();
-                                }
+                                    if (MSRInterface.eventID == MSRInterface.CONTACTLESS_CARD_EVENT_FOUND_CARD) {
+                                        if (!parseTrackData())
+                                            retry = true;
+                                        else
+                                            handler.obtainMessage(MSG_ID_SHOW_MESSAGE, "Magnetic Stripe Card Details Reading Successful").sendToTarget();
+                                    } else
+                                        retry = true;
+                                    MSRInterface.close();
+                                } else
+                                    handler.obtainMessage(MSG_ID_SHOW_MESSAGE, "Code:" + Integer.toHexString(MSRopenresult) + " (Device Open failed)").sendToTarget();
                             }
-                        });
-
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
-                catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
-        }.start();
+        };
+        thread.start();
     }
 
     private void displayCardDetails(String message) {

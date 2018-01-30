@@ -8,6 +8,7 @@
     <string name="qrr_title">QR Reader</string>
     <string name="fpr_title">Finger Print Reader</string>
     <string name="p_title">Printer</string>
+    <string name="cd_title">Cash Drawer</string>
     <string name="peso_sign">&#8369;</string>
     <string name="amount_title">AMOUNT</string>
     <string name="pan_title">Permanent Account Number</string>

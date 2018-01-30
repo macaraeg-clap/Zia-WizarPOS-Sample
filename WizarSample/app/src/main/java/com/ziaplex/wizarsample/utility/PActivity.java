@@ -41,8 +41,7 @@ public class PActivity extends BaseActivity implements UI.CustomButtonViewListen
                 String value = in.readLine();
                 in.close();
                 return value;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 return null;
             }
         }
@@ -57,17 +56,14 @@ public class PActivity extends BaseActivity implements UI.CustomButtonViewListen
                 if ("115200".equals(printerBaud)) {
                     Log.d("PrintUI", "GSV " + printerBaud);
                     printBitmapGSVMSB(bm, bitMarginLeft, bitMarginTop, alreadyOpen);
-                }
-                else if ("9600".equals(printerBaud)) {
+                } else if ("9600".equals(printerBaud)) {
                     Log.d("PrintUI", "DC2V" + printerBaud);
                     printBitmapDV2VMSB(bm, bitMarginLeft, bitMarginTop, alreadyOpen);
-                }
-                else {
+                } else {
                     Log.d("PrintUI", "GSV MSB" + printerBaud);
                     printBitmapGSVMSB(bm, bitMarginLeft, bitMarginTop, alreadyOpen);
                 }
-            }
-            else
+            } else
                 printBitmapGSVMSB(bm, bitMarginLeft, bitMarginTop, alreadyOpen);
         }
 
@@ -136,8 +132,7 @@ public class PActivity extends BaseActivity implements UI.CustomButtonViewListen
                             int bitX = bitMarginLeft + x, byteX = bitX / 8, byteY = y + bitMarginTop;
                             result[DC2V_HEAD + byteY * WIDTH + byteX] |= (0x80 >> (bitX - byteX * 8));
                         }
-                    }
-                    else
+                    } else
                         break;
                 }
             }
@@ -156,8 +151,7 @@ public class PActivity extends BaseActivity implements UI.CustomButtonViewListen
                             int bitX = bitMarginLeft + x, byteX = bitX / 8, byteY = y + bitMarginTop;
                             result[offset + byteY * WIDTH + byteX] |= (0x80 >> (bitX - byteX * 8));
                         }
-                    }
-                    else
+                    } else
                         break;
                 }
             }
@@ -173,8 +167,7 @@ public class PActivity extends BaseActivity implements UI.CustomButtonViewListen
                 if (i > 0) {
                     try {
                         Thread.sleep(2000);
-                    }
-                    catch (InterruptedException e) {
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
@@ -204,8 +197,7 @@ public class PActivity extends BaseActivity implements UI.CustomButtonViewListen
                             int color = bm.getPixel(x, y + line), alpha = Color.alpha(color), red = Color.red(color), green = Color.green(color), blue = Color.blue(color);
                             if (red < 128 || green < 128 || blue < 128)
                                 block[posByte] |= (0x80 >> posBitInByteLeft);
-                        }
-                        else
+                        } else
                             break;
                     }
                 }
@@ -301,8 +293,7 @@ public class PActivity extends BaseActivity implements UI.CustomButtonViewListen
             if (buffer.length <= byteLimit) {
                 v.add(buffer);
                 return v;
-            }
-            else {
+            } else {
                 int offset = DC2V_HEAD;
                 while (offset < buffer.length) {
                     byte[] buftemp = new byte[offset + byteLimit < buffer.length ? byteLimit : (buffer.length - offset)];
@@ -523,21 +514,18 @@ public class PActivity extends BaseActivity implements UI.CustomButtonViewListen
                     byte[] value = null;
                     try {
                         value = text.getBytes("UTF-8");
-                    }
-                    catch (UnsupportedEncodingException e) {
+                    } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
                     PrinterInterface.begin();
-                    PrinterBitmapUtil.printBitmap(qrBitmap, 25, 0, true);
+                    PrinterBitmapUtil.printBitmap(qrBitmap, 75, 0, true);
                     write(value);
                     writeLineBreak(5);
                     PrinterInterface.end();
-                }
-                else
+                } else
                     handler.obtainMessage(MSG_ID_SHOW_MESSAGE, "No Printer Detected").sendToTarget();
                 PrinterInterface.close();
-            }
-            catch (RuntimeException e) {
+            } catch (RuntimeException e) {
                 e.printStackTrace();
             }
         }

@@ -99,6 +99,8 @@ public class UI {
             super(context);
         }
 
+        private boolean isDisabled = false;
+
         public void onCreate(int iconResourceId, final String message, final CustomButtonViewListener listener) {
             LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if (li != null)
@@ -124,12 +126,17 @@ public class UI {
 
                             @Override
                             public void onClick(View view) {
-                                listener.onButtonClick(mThis, message);
+                                if (!isDisabled)
+                                    listener.onButtonClick(mThis, message);
                             }
                         });
                     }
                 }
             }
+        }
+
+        public void setDisabled(boolean disabled) {
+            isDisabled = disabled;
         }
 
         public void setMessage(String message) {
