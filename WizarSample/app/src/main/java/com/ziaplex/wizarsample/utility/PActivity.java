@@ -173,7 +173,7 @@ public class PActivity extends BaseActivity implements UI.CustomButtonViewListen
                 }
                 PrinterInterface.write(temp, temp.length);
             }
-            String text = "This is a text tset...";
+            String text = "This is a text test...";
             byte[] bufText = text.getBytes();
             PrinterInterface.write(bufText, bufText.length);
             PrinterInterface.write("\n".getBytes(), 1);

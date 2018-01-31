@@ -5,14 +5,11 @@
     <!-- MSR -->
     <uses-permission android:name="android.permission.CLOUDPOS_MSR"/>
 
-    <!-- Printer -->
-    <uses-permission android:name="android.permission.CLOUDPOS_PRINTER"/>
+    <!-- SmartCard -->
+    <uses-permission android:name="android.permission.CLOUDPOS_SMARTCARD"/>
 
-    <!-- Finger Print -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-    <uses-permission android:name="android.permission.CLOUDPOS_FINGERPRINT"/>
-    <uses-permission android:name="android.permission.WIZARPOS_FINGERPRINT"/>
+    <!-- RFID -->
+    <uses-permission android:name="android.permission.CLOUDPOS_CONTACTLESS_CARD"/>
 
     <!-- PIN Pad -->
     <uses-permission android:name="android.permission.CLOUDPOS_PIN_GET_PIN_BLOCK"/>
@@ -20,6 +17,18 @@
     <uses-permission android:name="android.permission.CLOUDPOS_PIN_ENCRYPT_DATA"/>
     <uses-permission android:name="android.permission.CLOUDPOS_PIN_UPDATE_USER_KEY"/>
     <uses-permission android:name="android.permission.CLOUDPOS_PIN_UPDATE_MASTER_KEY"/>
+
+    <!-- Finger Print -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.CLOUDPOS_FINGERPRINT"/>
+    <uses-permission android:name="android.permission.WIZARPOS_FINGERPRINT"/>
+
+    <!-- Printer -->
+    <uses-permission android:name="android.permission.CLOUDPOS_PRINTER"/>
+
+    <!-- Cash Drawer -->
+    <uses-permission android:name="android.permission.CLOUDPOS_MONEYBOX"/>
 
     <application
         android:allowBackup="true"
@@ -51,6 +60,17 @@
         <activity
             android:name=".utility.SCRActivity"
             android:label="@string/scr_title"
+            android:parentActivityName=".MainActivity"
+            android:configChanges="orientation|keyboardHidden">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
+
+        <activity
+            android:name=".utility.RFIDRActivity"
+            android:label="@string/rfidr_title"
             android:parentActivityName=".MainActivity"
             android:configChanges="orientation|keyboardHidden">
 

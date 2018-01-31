@@ -59,7 +59,7 @@ public class FPRActivity extends BaseActivity {
     private void displayNotSupported() {
         TextView v = findViewById(R.id.txt_message);
         if (v != null)
-            v.setText("Finger Print Reading is not Supported in this device...");
+            v.setText("Finger Print Reading is not Supported in this device");
     }
 
     private void displayFingerPrint(Bitmap image) {

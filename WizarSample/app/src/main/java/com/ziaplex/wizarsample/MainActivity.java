@@ -11,6 +11,7 @@ import com.ziaplex.wizarsample.utility.BCRActivity;
 import com.ziaplex.wizarsample.utility.CDActivity;
 import com.ziaplex.wizarsample.utility.FPRActivity;
 import com.ziaplex.wizarsample.utility.PPActivity;
+import com.ziaplex.wizarsample.utility.RFIDRActivity;
 import com.ziaplex.wizarsample.utility.SCRActivity;
 import com.ziaplex.wizarsample.utility.MSRActivity;
 import com.ziaplex.wizarsample.utility.PActivity;
@@ -25,8 +26,10 @@ public class MainActivity extends AppCompatActivity implements UI.CustomButtonVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         addButton(UI.createCustomButtonView(this, R.drawable.ic_msc, getString(R.string.mscr_title), this));
-        //addButton(UI.createCustomView(this, LinearLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen._10sdp)));
-        //addButton(UI.createCustomButtonView(this, R.drawable.ic_sc, getString(R.string.scr_title), this));
+        addButton(UI.createCustomView(this, LinearLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen._10sdp)));
+        addButton(UI.createCustomButtonView(this, R.drawable.ic_sc, getString(R.string.scr_title), this));
+        addButton(UI.createCustomView(this, LinearLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen._10sdp)));
+        addButton(UI.createCustomButtonView(this, R.drawable.ic_tap, getString(R.string.rfidr_title), this));
         addButton(UI.createCustomView(this, LinearLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen._10sdp)));
         addButton(UI.createCustomButtonView(this, R.drawable.ic_pad, getString(R.string.pp_title), this));
         addButton(UI.createCustomView(this, LinearLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen._10sdp)));
@@ -37,8 +40,8 @@ public class MainActivity extends AppCompatActivity implements UI.CustomButtonVi
         addButton(UI.createCustomButtonView(this, R.drawable.ic_finger_print, getString(R.string.fpr_title), this));
         addButton(UI.createCustomView(this, LinearLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen._10sdp)));
         addButton(UI.createCustomButtonView(this, R.drawable.ic_printer, getString(R.string.p_title), this));
-        //addButton(UI.createCustomView(this, LinearLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen._10sdp)));
-        //addButton(UI.createCustomButtonView(this, R.drawable.ic_cash_drawer, getString(R.string.cd_title), this));
+        addButton(UI.createCustomView(this, LinearLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen._10sdp)));
+        addButton(UI.createCustomButtonView(this, R.drawable.ic_cash_drawer, getString(R.string.cd_title), this));
         showLoadingView(false);
     }
 
@@ -54,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements UI.CustomButtonVi
         Class activity;
         if (getString(R.string.mscr_title).equals(text))
             activity = MSRActivity.class;
+        else if (getString(R.string.rfidr_title).equals(text))
+            activity = RFIDRActivity.class;
         else if (getString(R.string.scr_title).equals(text))
             activity = SCRActivity.class;
         else if (getString(R.string.pp_title).equals(text))

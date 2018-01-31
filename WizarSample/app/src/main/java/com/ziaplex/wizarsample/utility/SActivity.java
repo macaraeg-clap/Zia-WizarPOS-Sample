@@ -31,7 +31,7 @@ public class SActivity extends BaseActivity implements UI.CustomButtonViewListen
     }
 
     public String getBottomText() {
-        return "Result will be displayed here...";
+        return "Result will be displayed here";
     }
 
     public ScanParameter getScanParameter() {

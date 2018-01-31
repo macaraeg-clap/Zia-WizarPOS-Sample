@@ -34,7 +34,7 @@ public class PPActivity extends BaseActivity implements UI.CustomButtonViewListe
                 switch (msg.what) {
                     case MSG_ID_OPEN_MESSAGE:
                         if (buttonView != null) {
-                            buttonView.setMessage("Please enter PIN in the provided Pad...");
+                            buttonView.setMessage("Please enter PIN in the provided Pad");
                             buttonView.setDisabled(true);
                         }
                         break;
@@ -55,7 +55,7 @@ public class PPActivity extends BaseActivity implements UI.CustomButtonViewListe
                                 buttonView.setMessage("Start");
                                 buttonView.setDisabled(false);
                             } else {
-                                buttonView.setMessage("PIN Pad is not Supported in this device...");
+                                buttonView.setMessage("PIN Pad is not Supported in this device");
                                 buttonView.setDisabled(true);
                             }
                         }

@@ -71,33 +71,28 @@ public class MSRActivity extends BaseActivity {
             @Override
             public void run() {
                 while (!stop) {
-                    try {
-                        synchronized (this) {
-                            wait(1000);
-                            boolean retry = true;
-                            while (retry) {
-                                retry = false;
-                                int MSRopenresult = MSRInterface.open();
-                                if (MSRopenresult >= 0) {
-                                    try {
-                                        MSRInterface.waitForSwipe(50000);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                    if (MSRInterface.eventID == MSRInterface.CONTACTLESS_CARD_EVENT_FOUND_CARD) {
-                                        if (!parseTrackData())
-                                            retry = true;
-                                        else
-                                            handler.obtainMessage(MSG_ID_SHOW_MESSAGE, "Magnetic Stripe Card Details Reading Successful").sendToTarget();
-                                    } else
+                    synchronized (this) {
+                        boolean retry = true;
+                        while (retry) {
+                            retry = false;
+                            int MSRopenresult = MSRInterface.open();
+                            if (MSRopenresult >= 0) {
+                                try {
+                                    MSRInterface.waitForSwipe(50000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                if (MSRInterface.eventID == MSRInterface.CONTACTLESS_CARD_EVENT_FOUND_CARD) {
+                                    if (!parseTrackData())
                                         retry = true;
-                                    MSRInterface.close();
+                                    else
+                                        handler.obtainMessage(MSG_ID_SHOW_MESSAGE, "Magnetic Stripe Card Details Reading Successful").sendToTarget();
                                 } else
-                                    handler.obtainMessage(MSG_ID_SHOW_MESSAGE, "Code:" + Integer.toHexString(MSRopenresult) + " (Device Open failed)").sendToTarget();
-                            }
+                                    retry = true;
+                                MSRInterface.close();
+                            } else
+                                handler.obtainMessage(MSG_ID_SHOW_MESSAGE, "Code:" + Integer.toHexString(MSRopenresult) + " (Device Open failed)").sendToTarget();
                         }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
                 }
             }

@@ -2,6 +2,7 @@
     <string name="app_name">ZIA-WizarPOS</string>
     <string name="mscr_title">Magnetic Stripe Card Reader</string>
     <string name="scr_title">Smart Card Reader</string>
+    <string name="rfidr_title">RFID Reader</string>
     <string name="pp_title">Pin Pad</string>
     <string name="iccr_title">Integrated Circuit Card Reader</string>
     <string name="bcr_title">Bar Code Reader</string>

@@ -3,6 +3,7 @@ package com.ziaplex.wizarsample.utility;
 import android.os.Bundle;
 import android.view.View;
 
+import com.cloudpos.jniinterface.SmartCardInterface;
 import com.ziaplex.wizarsample.CardDetails;
 import com.ziaplex.wizarsample.R;
 import com.ziaplex.wizarsample.UI;
@@ -18,6 +19,7 @@ public class SCRActivity extends BaseActivity {
     }
 
     private CardDetails cardDetails;
+    private int slotIndex = 0, handle = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,5 +30,11 @@ public class SCRActivity extends BaseActivity {
     @Override
     public View onCreateMessage() {
         return UI.createMessageView(this, R.drawable.ic_sc, "Please Insert Card", null);
+    }
+
+    @Override
+    public void exit() {
+        SmartCardInterface.close(handle);
+        super.exit();
     }
 }
